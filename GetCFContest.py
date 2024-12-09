@@ -26,7 +26,7 @@ def getCF_Contest():
     before_contests = [contest for contest in contests if contest['phase'] == 'BEFORE']
 
     # 按 startTimeSeconds 倒序排序
-    before_contests_sorted = sorted(before_contests, key=lambda x: x['startTimeSeconds'], reverse=True)
+    before_contests_sorted = sorted(before_contests, key=lambda x: x['startTimeSeconds'], reverse=False)
 
     # 构建输出字符串
     for contest in before_contests_sorted:
