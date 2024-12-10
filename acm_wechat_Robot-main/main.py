@@ -71,7 +71,7 @@ def group_text_reply(msg):
             if(Resource_name[0]=='Codeforces' or Resource_name[0]=='cf'):
                 back=GetCFContest.getCF_Contest()
                 msg['User'].send(back)
-            elif(Resource_name[0]=='AtCoder' or Resource_name[0]=='at'):
+            elif(Resource_name[0]=='AtCoder' or Resource_name[0]=='atc'):
                 back=GetAtcContest.GetAtcContest()
                 msg['User'].send(back)
             else:
