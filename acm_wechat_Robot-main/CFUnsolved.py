@@ -1,7 +1,9 @@
 import requests
 
 def get_problem(id):
-    url = "https://codeforces.com/api/user.status?handle=" + id
+    # id删除&后面的内容
+    id = id.split('&')[0]
+    url = "https://codeforces.com/api/user.status?handle=" + id + "&from=1&count=5000"
     response = requests.get(url)
     data = response.json()
     if data['status'] != 'OK':
@@ -27,7 +29,9 @@ def get_unsolved(id):
     unsolved = unsolved - solved
     
     if len(unsolved) == 0:
-        return '你是补题大王！怎么全都补完了！'
+        if len(solved) == 0:
+            return "杂鱼没做过题目也来装蒜？"
+        return "补完题就滚去加训啊！杂鱼一点自觉性没有~"
     
     cnt = len(unsolved)
     ret = f"杂鱼怎么留了{cnt}个题没补啊！这么菜的吗？杂鱼杂鱼~\n"
@@ -35,7 +39,7 @@ def get_unsolved(id):
     for submission in data:
         problem_name = submission['problem']['name']
         if problem_name in unsolved and problem_name not in added_problems:
-            ret += f"{submission['problem']['contestId']}{submission['problem']['index']} {problem_name}\n"
+            ret += f"CF{submission['problem']['contestId']}{submission['problem']['index']} "
             added_problems.add(problem_name)
     
     return ret
