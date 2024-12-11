@@ -6,6 +6,7 @@ import GetCFContest
 import CFRatingDrawer
 import CFUnsolved
 import GetAtcContest
+import AtcRatingDrawer
 
 
 flag = 1
@@ -51,14 +52,19 @@ def group_text_reply(msg):
                 else:
                     msg['User'].send_image(img)
         elif msg.text.startswith('#atcrating'):
+            Username = msg.text[10:].split()
+            if(Username[0]==''):
+                msg['User'].send("不给名字我搜个锤子")
+            else:
+                img = AtcRatingDrawer.get_img(Username[0])
+                if img==None:
+                    msg['User'].send(f"苦呀西 找不到{Username[0]} qwq~")
+                else:
+                    msg['User'].send_image(img)
+        elif msg.text.startswith('#cfanalysis'):
             msg['User'].send("TODO")
         elif msg.text.startswith('#cf'):
-            # 提取'#cf'之后的内容作为命令
             Username = msg.text[3:].split()
-            # 根据命令执行相应的操作
-            # 这里只是一个示例，您可以根据需要添加具体的逻辑
-            # response = f"渲染器(TODO)\n coderforce id: {Username[0]} rate:{Getcodeforces.get_rate(Username[0])} \n这么菜真是杂鱼呢喵~"
-            # 回复消息到群聊
             img = ImageRenderer.get_img(Username[0])
             if img==None:
                 msg['User'].send(f"苦呀西 找不到{Username[0]} qwq~")
@@ -68,10 +74,11 @@ def group_text_reply(msg):
             msg['User'].send("TODO")
         elif msg.text.startswith('#近期比赛'):
             Resource_name = msg.text[5:].split()
-            if(Resource_name[0]=='Codeforces' or Resource_name[0]=='cf'):
+            if(Resource_name[0]=='Codeforces' or Resource_name[0]=='cf' or Resource_name[0]=='codeforces'):
                 back=GetCFContest.getCF_Contest()
                 msg['User'].send(back)
-            elif(Resource_name[0]=='AtCoder' or Resource_name[0]=='atc'):
+            elif(Resource_name[0]=='AtCoder' or Resource_name[0]=='atc' or Resource_name[0]=='atcoder' or 
+                 Resource_name[0]=='Atcoder' or Resource_name[0]=='atCoder'):
                 back=GetAtcContest.GetAtcContest()
                 msg['User'].send(back)
             else:
@@ -94,7 +101,8 @@ def group_text_reply(msg):
                              "4. #atcrating Userid 查看atcoder rating\n"
                              "5. #近期比赛 Resourceid 查看近期的比赛\n"
                              "6. #补题 Userid 查看未完成的题目\n"
-                             "7. #help帮助菜单\n"
+                             "7. #cfanalysis Userid 查看cf分析\n"
+                             "8. #help帮助菜单\n"
                              "灌注哈基幂谢谢喵~\n")
 
 
