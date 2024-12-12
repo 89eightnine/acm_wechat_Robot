@@ -42,7 +42,9 @@ def text_reply(msg):
 def group_text_reply(msg):
     global flag
     if flag:
-        if msg.text.startswith('#cfrating'):
+        if msg.text.startswith('#sum'):
+            msg['User'].send("TODO")
+        elif msg.text.startswith('#cfrating'):
             Username = msg.text[9:].split()
             if(Username[0]==''):
                 msg['User'].send("不给名字我搜个锤子")
@@ -123,6 +125,7 @@ def group_text_reply(msg):
                              "6. #补题 Userid 查看未完成的题目\n"
                              "7. #cfanalysis Userid lang/tag/null 查看cf分析\n"
                              "8. #help帮助菜单\n"
+                             "[限时] #Sum Userid 查看Codeforces2024年终总结\n"
                              "灌注哈基幂谢谢喵~\n")
 
 
