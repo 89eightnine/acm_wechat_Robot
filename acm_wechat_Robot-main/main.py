@@ -53,7 +53,7 @@ def group_text_reply(msg):
                 if img==None:
                     msg['User'].send(f"苦呀西 找不到{Username[0]} qwq~")
                 else:
-                    msg['User'].send_file(img)
+                    msg['User'].send_image(img)
         elif msg.text.startswith('#atcrating'):
             Username = msg.text[10:].split()
             if(Username[0]==''):
@@ -72,11 +72,11 @@ def group_text_reply(msg):
                 # 如果后面出现空格，说明是要查看具体的语言或者tag
                 if len(Username) > 1:
                     if Username[1] == 'lang':
-                        ret = CFAnalysis.CFLangAnalysis(Username[0])
-                        msg['User'].send_file(ret)
+                        ret = CFAnalysis.CFLangDraw(Username[0])
+                        msg['User'].send_image(ret)
                     elif Username[1] == 'tag':
-                        ret = CFAnalysis.CFTagAnalysis(Username[0])
-                        msg['User'].send_file(ret)
+                        ret = CFAnalysis.CFTagDraw(Username[0])
+                        msg['User'].send_image(ret)
                     elif Username[1] == 'null':
                         ret = CFAnalysis.CFAnalysis(Username[0])
                         msg['User'].send(ret)
