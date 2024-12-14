@@ -4,7 +4,16 @@ import time
 from matplotlib import font_manager
 
 def get_problem(id):
-    url = "https://codeforces.com/api/user.status?handle=" + id
+    # id删除&后面的内容
+    id = id.split('&')[0]
+    
+    url = "https://codeforces.com/api/user.rating?handle=" + id
+    response = requests.get(url)
+    data = response.json()
+    if data['result']:
+        url = "https://codeforces.com/api/user.status?handle=" + id
+    else :
+        return "无法查询机器人信息"
     response = requests.get(url)
     data = response.json()
     if data['status'] != 'OK':
@@ -16,6 +25,10 @@ def CFAnalysis(id):
     status = get_problem(id)
     if status == None:
         return "名字记错了？真是个杂鱼~"
+    if status == '找不到这个用户':
+        return '找不到这个用户'
+    if status == '无法查询机器人信息':
+        return '杂鱼不会以为我会傻乎乎地去查机器人信息把自己弄爆炸吧~'
     if len(status)==0:
         return id + "是题目都不敢交的杂鱼~"
     # 遍历所有提交，对OK的题目统计使用的Language，题目的rating，题目的tag
@@ -132,6 +145,10 @@ def CFLangDraw(id):
     data = get_problem(id)
     if data == '找不到这个用户':
         return '找不到这个用户'
+    if data == '无法查询机器人信息':
+        return '杂鱼不会以为我会傻乎乎地去查机器人信息把自己弄爆炸吧~'
+    if data == None:
+        return "名字记错了？真是个杂鱼~"
     
     language_dict = {}
     for submission in data:
@@ -162,6 +179,10 @@ def CFTagDraw(id):
     data = get_problem(id)
     if data == '找不到这个用户':
         return '找不到这个用户'
+    if data == '无法查询机器人信息':
+        return '杂鱼不会以为我会傻乎乎地去查机器人信息把自己弄爆炸吧~'
+    if data == None:
+        return "名字记错了？真是个杂鱼~"
     
     tag_dict = {}
     for submission in data:
@@ -189,7 +210,7 @@ def CFTagDraw(id):
     return 'tag.png'
 
 if __name__ == '__main__':
-    id = 'Swan416'
+    id = 'luogu_bot'
     print(CFAnalysis(id))
     print(CFLangDraw(id))
     print(CFTagDraw(id))

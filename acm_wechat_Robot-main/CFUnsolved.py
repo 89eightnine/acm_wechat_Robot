@@ -3,7 +3,15 @@ import requests
 def get_problem(id):
     # id删除&后面的内容
     id = id.split('&')[0]
-    url = "https://codeforces.com/api/user.status?handle=" + id + "&from=1&count=5000"
+
+    url = "https://codeforces.com/api/user.rating?handle=" + id
+    response = requests.get(url)
+    data = response.json()
+    if data['result']:
+        url = "https://codeforces.com/api/user.status?handle=" + id
+    else :
+        return "无法查询机器人信息"
+    
     response = requests.get(url)
     data = response.json()
     if data['status'] != 'OK':
@@ -14,6 +22,8 @@ def get_unsolved(id):
     data = get_problem(id)
     if data == '找不到这个用户':
         return '找不到这个用户'
+    if data == '无法查询机器人信息':
+        return '杂鱼不会以为我会傻乎乎地去查机器人信息把自己弄爆炸吧~\n'
     
     solved = set()
     unsolved = set()
