@@ -110,7 +110,7 @@ def get_sum_2024(id):
         if key not in question_wa_time:
             dont_miss_ac_cnt+=1
 
-    longest_time_id="";longest_time_title="";longest_time=0
+    longest_time_title="";longest_time=0
     for key in question_ac_time:
         if key in question_wa_time:
             ac_time_seconds = time.mktime(question_ac_time[key])
@@ -118,7 +118,6 @@ def get_sum_2024(id):
             if ac_time_seconds > wa_time_seconds:
                 if ac_time_seconds - wa_time_seconds > longest_time:
                     longest_time = ac_time_seconds - wa_time_seconds
-                    longest_time_id = key
                     longest_time_title = key
 
     url="https://codeforces.com/api/user.info?handles="+id
@@ -132,7 +131,7 @@ def get_sum_2024(id):
 
     org_improvement=['Swan416','Jayket','jxjxjx','gche','CatBiscuit','Krebet','jiejiejiang',
                 'xyktyjayket','kylin370','Dream_M','SHIZHEYANGDE','tootwp']
-    doi_silent=['oval_m','evilboy_','Slowly']
+    doi_silent=['oval_m','evilboy_','Slowly','evilb0y_']
     more_sleep=['RFDd','W.Sherlock.Henry','Lincians','Kay_kit']
     if id in org_improvement:
         ret += "2024的你比起提升自己，更乐意监督队友\n"
@@ -166,7 +165,7 @@ def get_sum_2024(id):
     ret+="我猜你的年度红温题可能是"+wa_max_id+"，交了"+str(wa_max_cnt)+"次还是没有过，可能这个名字"+wa_max_title+"已经深深印在你的脑海里了\n"
     ret+="当然有时可能换个思路又是海阔天空，提升一下自己再补题可能会让你感到豁然开朗\n"
 
-    ret+="最长的一个首wa到ac是"+longest_time_title+" "+longest_time_id+"，历经"+str(longest_time//86400)+"天"+str(longest_time%86400//3600)+"小时"+str(longest_time%3600//60)+"分钟"+str(longest_time%60)+"秒，"
+    ret+="最长的一个首wa到ac是"+longest_time_title+"，历经"+str(longest_time//86400)+"天"+str(longest_time%86400//3600)+"小时"+str(longest_time%3600//60)+"分钟"+str(longest_time%60)+"秒，"
     if longest_time<86400:
         ret+="有题从不留到第二天，你就是补题仙人吧！\n"
     else:
@@ -194,4 +193,4 @@ def get_sum_2024(id):
 
 
 if __name__ == '__main__':
-    print(get_sum_2024('W.Sherlock.Henry'))
+    print(get_sum_2024('CatBiscuit'))
