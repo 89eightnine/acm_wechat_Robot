@@ -56,7 +56,7 @@ def plot_rating_change(contests):
         plt.axhspan(2400, max_rating+100, facecolor='red', alpha=0.5)
 
     plt.plot(dates, ratings, marker='o', linestyle='-', color='b')
-    plt.xlabel('Date', fontproperties=font_prop)
+    plt.xlabel(' ', fontproperties=font_prop)
     plt.ylabel('Rating', fontproperties=font_prop)
     plt.title('Codeforces Rating Change', fontproperties=font_prop)
     plt.xticks([])  # 隐藏横坐标
@@ -68,7 +68,7 @@ def plot_rating_change(contests):
 
     plt.tight_layout()
     plt.savefig('rating_change.png')
-    plt.show()
+    #plt.show()
 
 def get_img(handle):
     contests = fetch_contest_data(handle)
