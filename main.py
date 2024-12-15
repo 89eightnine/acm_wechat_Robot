@@ -8,6 +8,7 @@ import CFUnsolved
 import GetAtcContest
 import AtcRatingDrawer
 import CFAnalysis
+import Sum2024
 
 
 flag = 1
@@ -43,7 +44,12 @@ def group_text_reply(msg):
     global flag
     if flag:
         if msg.text.startswith('#sum'):
-            msg['User'].send("TODO")
+            Username = msg.text[5:].split()
+            if(Username[0]==''):
+                msg['User'].send("不给名字我搜个锤子")
+            else:
+                ret = Sum2024.get_sum_2024(Username[0])
+                msg['User'].send(ret)
         elif msg.text.startswith('#cfrating'):
             Username = msg.text[9:].split()
             if(Username[0]==''):
