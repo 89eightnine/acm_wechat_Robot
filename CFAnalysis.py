@@ -172,7 +172,7 @@ def CFLangDraw(id):
     plt.pie(sizes, labels=labels, autopct=autopct)
     plt.axis('equal')
     plt.savefig('lang.png')
-    plt.show()
+    # plt.show()
     return 'lang.png'
 
 def CFTagDraw(id):
@@ -206,7 +206,7 @@ def CFTagDraw(id):
     plt.pie(sizes, labels=labels, autopct=autopct)
     plt.axis('equal')
     plt.savefig('tag.png')
-    plt.show()
+    # plt.show()
     return 'tag.png'
 
 if __name__ == '__main__':

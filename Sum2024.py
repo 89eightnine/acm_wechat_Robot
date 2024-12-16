@@ -53,8 +53,10 @@ def get_sum_2024(id):
     submission_cnt=0
 
     for subbmission in data:
-        if time.localtime(subbmission['creationTimeSeconds']).tm_year != 2024:
+        if time.localtime(subbmission['creationTimeSeconds']).tm_year < 2024:
             break
+        if time.localtime(subbmission['creationTimeSeconds']).tm_year > 2024:
+            continue
 
         submission_cnt+=1
 
@@ -67,7 +69,7 @@ def get_sum_2024(id):
                 vp_cnt+=1
                 vp_viewed[subbmission['author']['contestId']]=1
                 for members in subbmission['author']['members']:
-                    if members['handle']!=id:
+                    if members['handle'].lower() != id.lower():
                         if members['handle'] in vp_partner:
                             vp_partner[members['handle']]+=1
                         else:
