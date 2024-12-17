@@ -129,6 +129,101 @@ def get_sum_2024(id):
         return "找不到这个用户"
     registrationTimeSeconds=data['result'][0]['registrationTimeSeconds']
 
+    url="https://codeforces.com/api/user.rating?handle="+id
+    response=requests.get(url)
+    data=response.json()
+    if data['status']!="OK":
+        return "找不到这个用户"
+    rating_data=data['result']
+
+    # 2024年参与过的比赛场次数 2024年第一次参加比赛的时间
+    contest_cnt=0;first_contest_time=0
+    # 2024年最高rating涨幅以及这场比赛的名称和时间
+    max_improvement=0;max_improvement_contest="";max_improvement_time=0
+    # 2024年最大rating跌幅以及这场比赛的名称和时间
+    max_decline=0;max_decline_contest="";max_decline_time=0
+    # 2024年最高rating以及这个rating出现的时间
+    max_rating=0;max_rating_time=0
+    # 2024年曾处于过的段位
+    rank={"newbie":0,"pupil":0,"specialist":0,"expert":0,"candidate master":0,"master":0,"international master":0,"grandmaster":0,"international grandmaster":0,"legendary grandmaster":0}
+    # 2024年最高连续涨分场次数以及第一场的名字和时间
+    max_consecutive_improvement=0;max_consecutive_improvement_contest="";max_consecutive_improvement_time=0
+    consecutive_improvement=0;consecutive_improvement_contest="";consecutive_improvement_time=0
+    # 2024年最高连续跌分场次数以及第一场的名字和时间
+    max_consecutive_decline=0;max_consecutive_decline_contest="";max_consecutive_decline_time=0
+    consecutive_decline=0;consecutive_decline_contest="";consecutive_decline_time=0
+
+    def getrank(rating):
+        if rating<1200:
+            return "newbie"
+        if rating<1400:
+            return "pupil"
+        if rating<1600:
+            return "specialist"
+        if rating<1900:
+            return "expert"
+        if rating<2100:
+            return "candidate master"
+        if rating<2300:
+            return "master"
+        if rating<2400:
+            return "international master"
+        if rating<2600:
+            return "grandmaster"
+        if rating<3000:
+            return "international grandmaster"
+        return "legendary grandmaster"
+
+    for contest in rating_data:
+        if time.localtime(contest['ratingUpdateTimeSeconds']).tm_year < 2024:
+            continue
+        if time.localtime(contest['ratingUpdateTimeSeconds']).tm_year > 2024:
+            break
+
+        contest_cnt+=1
+        if contest_cnt==1:
+            first_contest_time=contest['ratingUpdateTimeSeconds']
+
+        if contest['newRating']-contest['oldRating']>max_improvement:
+            max_improvement=contest['newRating']-contest['oldRating']
+            max_improvement_contest=contest['contestName']
+            max_improvement_time=contest['ratingUpdateTimeSeconds']
+
+        if contest['newRating']-contest['oldRating']<max_decline:
+            max_decline=contest['newRating']-contest['oldRating']
+            max_decline_contest=contest['contestName']
+            max_decline_time=contest['ratingUpdateTimeSeconds']
+
+        rank[getrank(contest['newRating'])]+=1
+
+        if contest['newRating']>max_rating:
+            max_rating=contest['newRating']
+            max_rating_time=contest['ratingUpdateTimeSeconds']
+
+        if contest['newRating']-contest['oldRating']>0:
+            consecutive_improvement+=1
+            if consecutive_improvement==1:
+                consecutive_improvement_contest=contest['contestName']
+                consecutive_improvement_time=contest['ratingUpdateTimeSeconds']
+            if consecutive_improvement>=max_consecutive_improvement:
+                max_consecutive_improvement=consecutive_improvement
+                max_consecutive_improvement_contest=consecutive_improvement_contest
+                max_consecutive_improvement_time=consecutive_improvement_time
+        else:
+            consecutive_improvement=0
+        
+        if contest['newRating']-contest['oldRating']<0:
+            consecutive_decline+=1
+            if consecutive_decline==1:
+                consecutive_decline_contest=contest['contestName']
+                consecutive_decline_time=contest['ratingUpdateTimeSeconds']
+            if consecutive_decline>=max_consecutive_decline:
+                max_consecutive_decline=consecutive_decline
+                max_consecutive_decline_contest=consecutive_decline_contest
+                max_consecutive_decline_time=consecutive_decline_time
+        else:
+            consecutive_decline=0
+
     ret=id+"同学，你在"+time.strftime("%Y-%m-%d", time.localtime(registrationTimeSeconds))+"加入了Codeforces\n"
 
     org_improvement=['Swan416','Jayket','jxjxjx','gche','CatBiscuit','Krebet','jiejiejiang',
@@ -188,6 +283,22 @@ def get_sum_2024(id):
     ret+=time.strftime("%m月%d日%H:%M:%S", full_earliest_submission_time)+"队友还在梦中，你向着"+earliest_subbmission_id+"进行了清晨第一发提交\n"
     ret+=time.strftime("%m月%d日%H:%M:%S", full_latest_submission_time)+"你还在为"+latest_subbmission_id+"苦苦思索，可能写不出这题很难睡着吧\n"
 
+    if(contest_cnt==0):
+        ret+="\n2024年你没有参加过比赛，是不是有点太摆了？\n"
+    else:
+        ret+="\n从"+time.strftime("%m月%d日", time.localtime(first_contest_time))+"开始，你在2024年一共参加了"+str(contest_cnt)+"场比赛\n"
+        ret+="在这一年里，你的rating也经历了不少波折\n"
+        ret+="最高rating是"+str(max_rating)+"，出现在"+time.strftime("%m月%d日", time.localtime(max_rating_time))+"，"
+        ret+="最高rating的时候你是不是也有点小激动呢？\n"
+        ret+="上分最猛的一次是"+str(max_improvement)+"，那是"+time.strftime("%m月%d日", time.localtime(max_improvement_time))+"的"+max_improvement_contest+";\n"
+        ret+="掉分最猛的一次是"+str(max_decline)+"，那是"+time.strftime("%m月%d日", time.localtime(max_decline_time))+"的"+max_decline_contest+"。\n这两场比赛想来都会计入你的史册当中吧\n"
+        ret+="\n人生嘛，总是大起大落\n"
+        ret+="2024年的你也在不同段位起起伏伏，陪伴你最久的段位是"+max(rank,key=rank.get)+"，你在这里停留了"+str(rank[max(rank,key=rank.get)])+"场比赛\n"
+        ret+="兵贵神速，有的时候上分讲究一个一鼓作气，千万不要怂\n"
+        ret+="你今年最多连续上分"+str(max_consecutive_improvement)+"场，从"+time.strftime("%m月%d日", time.localtime(max_consecutive_improvement_time))+"的"+max_consecutive_improvement_contest+"开始，那段时间是不是每天都非常亢奋呢？\n"
+        ret+="当然，运气也不总是那么好，你今年最多连续掉分"+str(max_consecutive_decline)+"场，从"+time.strftime("%m月%d日", time.localtime(max_consecutive_decline_time))+"的"+max_consecutive_decline_contest+"开始，那段时间是不是有点小折磨？\n"
+        
+
     ret+="\n最后，2024年对你来说是一个怎样的一年呢？\n"
     ret+="想来你自己也有很多的想法，不管怎么样，2025年也要继续加油哦！我们明年年底再见！\n"
 
@@ -195,4 +306,4 @@ def get_sum_2024(id):
 
 
 if __name__ == '__main__':
-    print(get_sum_2024('CatBiscuit'))
+    print(get_sum_2024('Swan416'))
